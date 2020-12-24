@@ -1,4 +1,6 @@
 import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
+import { Point2D } from 'src/app/math/point2d';
+import { WireConnectorService } from 'src/app/shapes/wire-connector.service';
 import { Shape } from '../../shapes/base/shape';
 // import { PositionMarker } from './shapes/controls/position-marker.service';
 // import { ToolboxItem } from './toolbox/base/toolbox-item';
@@ -27,7 +29,7 @@ export class MainComponent implements OnInit, AfterViewInit {
   // public viewport: ElementRef | null = null;
 
   public constructor(
-    private renderer: Renderer2,
+    private renderer: Renderer2
   ) {
   }
 

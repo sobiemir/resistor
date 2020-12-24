@@ -9,6 +9,7 @@ import { DiagramComponent } from './pages/diagram/diagram.component';
 import { DiagramService } from './pages/diagram/diagram.service';
 import { ToolboxService } from './toolbox/toolbox.service';
 import { PositionMarkerService } from './shapes/position-marker.service';
+import { WireConnectorService } from './shapes/wire-connector.service';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { PositionMarkerService } from './shapes/position-marker.service';
     DiagramService,
     ToolboxFactory,
     ToolboxService,
-    PositionMarkerService
+    PositionMarkerService,
+    WireConnectorService
   ],
   bootstrap: [
     MainComponent

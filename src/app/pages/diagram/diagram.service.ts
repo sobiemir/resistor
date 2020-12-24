@@ -42,7 +42,10 @@ export class DiagramService {
 
   public getConnectorsContainer(): SVGGHTMLElement {
     if (!this._connectorsContainer) {
-      throw new Error('Service was not initialized correctly!');
+      this._connectorsContainer = document.getElementById('resistorConnectorsContainer') as SVGGHTMLElement;
+      if (!this._connectorsContainer) {
+        throw new Error('Connectors container does not exist in current page!');
+      }
     }
     return this._connectorsContainer;
   }
