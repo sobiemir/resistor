@@ -4,7 +4,7 @@ import { MultistepShape } from './base/multistep-shape';
 export class PolyLineShape extends MultistepShape {
   public pointsAttribute = '';
 
-  private points: Vector2d[] = [];
+  private _points: Vector2d[] = [];
 
   public hasMultipleParts(): boolean {
     return true;
@@ -22,7 +22,7 @@ export class PolyLineShape extends MultistepShape {
 
   public createStep(event: MouseEvent): void {
     const stepPoint = this.getMousePosition(event);
-    const idx = this.points.length - 1;
+    const idx = this._points.length - 1;
 
     this.setPoint(idx, stepPoint);
     this.addPoint(stepPoint);
@@ -30,39 +30,39 @@ export class PolyLineShape extends MultistepShape {
 
   public modifySelectedStep(event: MouseEvent): void {
     const stepPoint = this.getMousePosition(event);
-    const idx = this.points.length - 1;
+    const idx = this._points.length - 1;
 
     this.setPoint(idx, stepPoint);
   }
 
   public removeSelectedStep(event: MouseEvent): void {
-    const idx = this.points.length - 1;
+    const idx = this._points.length - 1;
     this.removePoint(idx);
   }
 
   public getPoints(): Vector2d[] {
-    return this.points;
+    return this._points;
   }
 
   public addPoint(point: Vector2d): void {
-    this.points.push(point);
+    this._points.push(point);
     this.generatePoints();
   }
 
   public setPoint(index: number, point: Vector2d): void {
-    this.points[index] = point;
+    this._points[index] = point;
     this.generatePoints();
   }
 
   public removePoint(index: number): void {
-    this.points.splice(index, 1);
+    this._points.splice(index, 1);
     this.generatePoints();
   }
 
   private generatePoints(): void {
     let stringPoints = '';
-    for (let idx = 0; idx < this.points.length; ++idx) {
-      const point = this.points[idx];
+    for (let idx = 0; idx < this._points.length; ++idx) {
+      const point = this._points[idx];
       if (idx === 0) {
         stringPoints += `${point.x},${point.y}`;
       } else {
@@ -75,27 +75,27 @@ export class PolyLineShape extends MultistepShape {
 
   private generateShape(): void {
     const polyline = this.renderer.createElement('polyline', 'svg');
-    this.shapeElement = polyline;
+    this._shapeElement = polyline;
 
     this.refreshPoints();
     this.refreshStyles();
 
-    this.renderer.appendChild(this.shapesContainer, this.shapeElement);
+    this.renderer.appendChild(this.shapesContainer, this._shapeElement);
   }
 
   private refreshPoints(): void {
-    if (this.shapeElement == null) {
+    if (this._shapeElement == null) {
       return;
     }
-    this.shapeElement.setAttribute('points', this.pointsAttribute);
+    this._shapeElement.setAttribute('points', this.pointsAttribute);
   }
 
   private refreshStyles(): void {
-    if (this.shapeElement == null) {
+    if (this._shapeElement == null) {
       return;
     }
-    this.shapeElement.style.fill = 'none';
-    this.shapeElement.style.stroke = 'black';
-    this.shapeElement.style.strokeWidth = '3';
+    this._shapeElement.style.fill = 'none';
+    this._shapeElement.style.stroke = 'black';
+    this._shapeElement.style.strokeWidth = '3';
   }
 }

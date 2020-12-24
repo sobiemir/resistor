@@ -1,30 +1,18 @@
-import { Renderer2 } from '@angular/core';
-import { SVGHTMLElement } from '../../app.types';
 import { Vector2d } from '../../math/vector2d';
+import { ShapeConfiguration } from './shape-configuration';
 
-export abstract class Shape {
-  protected shapeElement: SVGElement | null = null;
-  private created = false;
-
-  public constructor(
-    protected renderer: Renderer2,
-    protected viewport: SVGHTMLElement,
-    protected shapesContainer: SVGGElement
-  ) { }
+export abstract class Shape extends ShapeConfiguration {
+  protected _shapeElement: SVGElement | null = null;
 
   public isMultistep(): boolean {
     return false;
-  }
-
-  public wasCreated(): boolean {
-    return this.created;
   }
 
   public create(event: MouseEvent): void {
     if (this.wasCreated()) {
       throw new Error('This element was created before.');
     }
-    this.created = true;
+    this._created = true;
   }
 
   public getMousePosition(event: MouseEvent): Vector2d {
@@ -32,17 +20,24 @@ export abstract class Shape {
     if (ctm == null) {
       throw new Error('There was an undefined error while executing getMousePosition function.');
     }
-    const mx = (event.clientX - ctm.e) / ctm.a;
-    const my = (event.clientY - ctm.f) / ctm.d;
+    let mx = (event.clientX - ctm.e) / ctm.a;
+    let my = (event.clientY - ctm.f) / ctm.d;
 
+    if (Shape._snapToGrid) {
+      const snapSize = Shape._snapToGridSize;
+      const halfSnap = snapSize / 2;
+
+      mx = ~~((mx + halfSnap) / snapSize) * snapSize;
+      my = ~~((my + halfSnap) / snapSize) * snapSize;
+    }
     return new Vector2d(mx, my);
   }
 
   public getShapeElement(): SVGElement {
-    if (this.shapeElement == null) {
+    if (this._shapeElement == null) {
       throw new Error('Shape was not created yet.');
     }
-    return this.shapeElement;
+    return this._shapeElement;
   }
 
   public onMouseDown(event: MouseEvent): Shape | null {
