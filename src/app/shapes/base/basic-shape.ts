@@ -8,6 +8,8 @@ export abstract class BasicShape extends ShapeConfiguration {
 
   public abstract onMouseDown(event: MouseEvent): BasicShape | null;
   public abstract onMouseMove(event: MouseEvent): BasicShape | null;
+  public abstract onMouseUp(event: MouseEvent): BasicShape | null;
+
   protected abstract refreshStyles(): void;
 
   public isVisible(): boolean {

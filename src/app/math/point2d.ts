@@ -35,6 +35,13 @@ export class Point2D implements IPoint2D {
     return this;
   }
 
+  public isEqual(point: Point2D): boolean {
+    if (point.x === this.x && point.y === this.y) {
+      return true;
+    }
+    return false;
+  }
+
   public getAngle(x: number, y: number, type: EAngleType = EAngleType.Angle_360): number {
     const rad = Math.atan2(y - this.y, x - this.x);
 

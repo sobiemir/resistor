@@ -1,11 +1,11 @@
 import { Renderer2 } from '@angular/core';
-import { SVGHTMLElement } from 'src/app/app.types';
 import { DiagramService } from 'src/app/pages/diagram/diagram.service';
 import { BasicShape } from './basic-shape';
 
 export abstract class Shape extends BasicShape {
   protected _shapeElement: SVGElement | null = null;
   protected _previewElement: SVGElement | null = null;
+  protected _createStarted = false;
   protected _created = false;
 
   public constructor(
@@ -19,20 +19,30 @@ export abstract class Shape extends BasicShape {
     return false;
   }
 
-  public wasCreated(): boolean {
-    return this._created;
+  public onCreateStart(event: MouseEvent): void {
+    if (this._createStarted) {
+      throw new Error('Creation of this element was started before.');
+    }
+    this._createStarted = true;
   }
 
-  public create(event: MouseEvent): void {
-    if (this.wasCreated()) {
+  public onCreateEnd(event: MouseEvent): void {
+    if (this._created) {
       throw new Error('This element was created before.');
     }
     this._created = true;
   }
 
   public onMouseDown(event: MouseEvent): Shape | null {
-    if (!this.wasCreated()) {
-      this.create(event);
+    if (!this._createStarted) {
+      this.onCreateStart(event);
+    }
+    return this;
+  }
+
+  public onMouseUp(event: MouseEvent): Shape | null {
+    if (!this._created) {
+      this.onCreateEnd(event);
     }
     return this;
   }

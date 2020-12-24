@@ -6,20 +6,28 @@ export abstract class MultistepShape extends Shape {
     return true;
   }
 
-  public abstract createStep(event: MouseEvent): void;
+  public abstract onCreateStep(event: MouseEvent): void;
   public abstract modifySelectedStep(event: MouseEvent): void;
   public abstract removeSelectedStep(event: MouseEvent): void;
 
+  public onCreateEnd(event: MouseEvent): void {
+    this.removeSelectedStep(event);
+  }
+
   public onMouseDown(event: MouseEvent): Shape | null {
     if (event.button === EMouseButton.Right) {
-      this.removeSelectedStep(event);
+      this.onCreateEnd(event);
       return null;
     }
-    if (!this.wasCreated()) {
-      this.create(event);
+    if (!this._createStarted) {
+      this.onCreateStart(event);
     } else {
-      this.createStep(event);
+      this.onCreateStep(event);
     }
+    return this;
+  }
+
+  public onMouseUp(event: MouseEvent): Shape | null {
     return this;
   }
 

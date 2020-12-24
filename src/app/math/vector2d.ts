@@ -1,36 +1,36 @@
 import { IPoint2D } from 'src/interfaces/point2d.interface';
+import { Point2D } from './point2d';
 
 export class Vector2D implements IPoint2D {
   public x = 0;
   public y = 0;
 
-  public constructor(x: number, y: number);
-  public constructor(x1: number, y1: number, x2?: number, y2?: number) {
-    if (x2 == null || y2 == null) {
-      this.x = x1;
-      this.y = y1;
-    } else {
-      this.x = x2 - x1;
-      this.y = y2 - y1;
-    }
+  public static fromPoints(p1: Point2D, p2: Point2D): Vector2D {
+    const x = p2.x - p1.x;
+    const y = p2.y - p1.y;
+
+    return new Vector2D(x, y);
+  }
+
+  public constructor(x: number, y: number) {
+    this.x = x;
+    this.y = y;
   }
 
   public clone(): Vector2D {
     return new Vector2D(this.x, this.y);
   }
 
-  public add(v: Vector2D): Vector2D;
-  public add(p: IPoint2D): Vector2D {
-    this.x += p.x;
-    this.y += p.y;
+  public add(v: Vector2D): Vector2D{
+    this.x += v.x;
+    this.y += v.y;
 
     return this;
   }
 
-  public sub(v: Vector2D): Vector2D;
-  public sub(p: IPoint2D): Vector2D {
-    this.x -= p.x;
-    this.y -= p.y;
+  public sub(v: Vector2D): Vector2D {
+    this.x -= v.x;
+    this.y -= v.y;
 
     return this;
   }
@@ -40,6 +40,10 @@ export class Vector2D implements IPoint2D {
     this.y *= n;
 
     return this;
+  }
+
+  public crossProduct(vector: Vector2D): number {
+    return this.x * vector.y - this.y * vector.x;
   }
 
   public getLength(): number {

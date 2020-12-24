@@ -1,3 +1,4 @@
+import { Vector2D } from 'src/app/math/vector2d';
 import { Point2D } from '../../math/point2d';
 import { MultistepShape } from '../base/multistep-shape';
 
@@ -5,9 +6,10 @@ export class PolylineShape extends MultistepShape {
   public pointsAttribute = '';
 
   private _points: Point2D[] = [];
+  private _vectors: Vector2D[] = [];
 
-  public create(event: MouseEvent): void {
-    super.create(event);
+  public onCreateStart(event: MouseEvent): void {
+    super.onCreateStart(event);
 
     const startPoint = this.getMousePosition(event);
     this.addPoint(startPoint);
@@ -16,7 +18,7 @@ export class PolylineShape extends MultistepShape {
     this.generateShape();
   }
 
-  public createStep(event: MouseEvent): void {
+  public onCreateStep(event: MouseEvent): void {
     const currPoint = this.getMousePosition(event);
     const idx = this._points.length - 1;
 
@@ -24,7 +26,21 @@ export class PolylineShape extends MultistepShape {
       ? this.lockPointHV(idx, currPoint)
       : currPoint;
 
+    const lastPoint = this._points.length > 1
+      ? this._points[this._points.length - 2]
+      : newPoint;
+
+    // prevent adding two same points in container
+    if (lastPoint.isEqual(newPoint)) {
+      return;
+    }
     this.setPoint(idx, newPoint);
+
+    // add vector for polyline (require at least 2 points)
+    const pa = this._points[this._points.length - 1];
+    const pb = this._points[this._points.length - 2];
+
+    this._vectors.push(Vector2D.fromPoints(pa, pb));
     this.addPoint(newPoint);
   }
 
@@ -79,7 +95,7 @@ export class PolylineShape extends MultistepShape {
     this._shapeElement.style.strokeWidth = '1';
   }
 
-  private lockPointHV(index: number, mousePosition: Point2D): Point2D {
+  protected lockPointHV(index: number, mousePosition: Point2D): Point2D {
     const prevPoint = this._points[index - 1];
 
     const sx = Math.abs(mousePosition.x - prevPoint.x);
@@ -91,7 +107,7 @@ export class PolylineShape extends MultistepShape {
     return new Point2D(prevPoint.x, mousePosition.y);
   }
 
-  private generatePoints(): void {
+  protected generatePoints(): void {
     let stringPoints = '';
     for (let idx = 0; idx < this._points.length; ++idx) {
       const point = this._points[idx];
@@ -105,7 +121,7 @@ export class PolylineShape extends MultistepShape {
     this.refreshPoints();
   }
 
-  private generateShape(): void {
+  protected generateShape(): void {
     const polyline = this._renderer.createElement('polyline', 'svg');
     this._shapeElement = polyline;
 

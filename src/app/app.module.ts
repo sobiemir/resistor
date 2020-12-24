@@ -8,7 +8,7 @@ import { ToolboxComponent } from './partials/toolbox/toolbox.component';
 import { DiagramComponent } from './pages/diagram/diagram.component';
 import { DiagramService } from './pages/diagram/diagram.service';
 import { ToolboxService } from './toolbox/toolbox.service';
-import { PositionMarkerService } from './shapes/controls/position-marker.service';
+import { PositionMarkerService } from './shapes/position-marker.service';
 
 @NgModule({
   declarations: [

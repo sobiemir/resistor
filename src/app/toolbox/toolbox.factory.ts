@@ -1,7 +1,7 @@
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 import { IToolboxItem } from 'src/interfaces/toolbox-item.interface';
 import { DiagramService } from '../pages/diagram/diagram.service';
-import { PositionMarkerService } from '../shapes/controls/position-marker.service';
+import { PositionMarkerService } from '../shapes/position-marker.service';
 import { PolylineBuilder } from './builders/polyline.builder';
 import { ShapeSelectionTool } from './tools/shape-selection';
 

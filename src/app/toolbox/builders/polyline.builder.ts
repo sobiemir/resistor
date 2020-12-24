@@ -1,7 +1,7 @@
 import { Renderer2 } from '@angular/core';
 import { DiagramService } from 'src/app/pages/diagram/diagram.service';
-import { PositionMarkerService } from 'src/app/shapes/controls/position-marker.service';
 import { PolylineShape } from 'src/app/shapes/drawable/polyline';
+import { PositionMarkerService } from 'src/app/shapes/position-marker.service';
 import { Shape } from '../../shapes/base/shape';
 import { ToolboxItem } from '../base/toolbox-item';
 
