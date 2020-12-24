@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild, ViewContainerRef } from '@angular/core';
 import { PolyLineShape } from './shapes/polyline.shape';
 import { Shape } from './shapes/base/shape';
+import { PositionMarker } from './shapes/controls/position-marker';
 
 @Component({
   selector: 'app-root',
@@ -12,28 +13,33 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   public shapes: Shape[] = [];
   public currentShape: Shape | null = null;
+  public positionMarker: PositionMarker | null = null;
 
   // @ViewChildren('shapeTemplate', { read: ViewContainerRef })
   // public shapeTemplates: QueryList<ViewContainerRef> = new QueryList();
   @ViewChild('resistorShapesContainer', { read: ElementRef })
   public shapesContainer: ElementRef | null = null;
 
+  @ViewChild('resistorControls', { read: ElementRef })
+  public controlsContainer: ElementRef | null = null;
+
   @ViewChild('resistorViewport', { read: ElementRef })
   public viewport: ElementRef | null = null;
 
   public constructor(
     private renderer: Renderer2
-  ) { }
+  ) {
+  }
 
   public ngOnInit(): void {
-    // this.viewport = document.getElementById('resistorViewport') as SVGHTMLElement;
-    // this.shapesContainer = document.getElementById('resistorShapesContainer') as HTMLElement;
   }
 
   public ngAfterViewInit(): void {
-    // this.shapeTemplates.changes.subscribe((next: QueryList<ViewContainerRef>) => {
-    //   console.log(next);
-    // });
+    this.positionMarker = new PositionMarker(
+      this.renderer,
+      this.viewport?.nativeElement,
+      this.controlsContainer?.nativeElement
+    );
   }
 
   public onMouseDown(event: MouseEvent): void {
@@ -57,10 +63,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   public onMouseMove(event: MouseEvent): void {
-    if (this.currentShape == null) {
-      return;
-    }
-    this.currentShape.onMouseMove(event);
+    this.positionMarker?.onMouseMove(event);
+    this.currentShape?.onMouseMove(event);
   }
 
   public onContextMenu(event: MouseEvent): boolean {

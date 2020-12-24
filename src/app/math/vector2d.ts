@@ -1,47 +1,41 @@
-import { IVector2d } from 'src/interfaces/vector2d.interface';
+import { IPoint2D } from 'src/interfaces/point2d.interface';
 
-export class Vector2d implements IVector2d {
+export class Vector2D implements IPoint2D {
   public x = 0;
   public y = 0;
 
-  public constructor(x: number, y: number) {
-    this.x = x;
-    this.y = y;
+  public constructor(x: number, y: number);
+  public constructor(x1: number, y1: number, x2?: number, y2?: number) {
+    if (x2 == null || y2 == null) {
+      this.x = x1;
+      this.y = y1;
+    } else {
+      this.x = x2 - x1;
+      this.y = y2 - y1;
+    }
   }
 
-  public clone(): Vector2d {
-    return new Vector2d(this.x, this.y);
+  public clone(): Vector2D {
+    return new Vector2D(this.x, this.y);
   }
 
-  public add(v: Vector2d): Vector2d {
-    this.x += v.x;
-    this.y += v.y;
+  public add(v: Vector2D): Vector2D;
+  public add(p: IPoint2D): Vector2D {
+    this.x += p.x;
+    this.y += p.y;
 
     return this;
   }
 
-  public addNums(x: number, y: number): Vector2d {
-    this.x += x;
-    this.y += y;
+  public sub(v: Vector2D): Vector2D;
+  public sub(p: IPoint2D): Vector2D {
+    this.x -= p.x;
+    this.y -= p.y;
 
     return this;
   }
 
-  public substract(v: Vector2d): Vector2d {
-    this.x -= v.x;
-    this.y -= v.y;
-
-    return this;
-  }
-
-  public substractNums(x: number, y: number): Vector2d {
-    this.x -= x;
-    this.y -= y;
-
-    return this;
-  }
-
-  public multiply(n: number): Vector2d {
+  public mul(n: number): Vector2D {
     this.x *= n;
     this.y *= n;
 
@@ -51,20 +45,6 @@ export class Vector2d implements IVector2d {
   public getLength(): number {
     const xe = Math.abs(this.x);
     const ye = Math.abs(this.y);
-
-    return Math.sqrt(xe * xe + ye * ye);
-  }
-
-  public getLengthSP(startPoint: Vector2d): number {
-    const xe = Math.abs(this.x - startPoint.x);
-    const ye = Math.abs(this.y - startPoint.y);
-
-    return Math.sqrt(xe * xe + ye * ye);
-  }
-
-  public getLengthEP(endPoint: Vector2d): number {
-    const xe = Math.abs(endPoint.x - this.x);
-    const ye = Math.abs(endPoint.y - this.y);
 
     return Math.sqrt(xe * xe + ye * ye);
   }
