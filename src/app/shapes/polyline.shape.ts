@@ -1,7 +1,7 @@
 import { Vector2d } from 'src/app/math/vector2d';
-import { Shape } from './shape';
+import { MultistepShape } from './base/multistep-shape';
 
-export class PolyLineShape extends Shape {
+export class PolyLineShape extends MultistepShape {
   public pointsAttribute = '';
 
   private points: Vector2d[] = [];
@@ -10,14 +10,34 @@ export class PolyLineShape extends Shape {
     return true;
   }
 
-  public create(event: MouseEvent, shapesContainer: SVGGElement): void {
-    super.create(event, shapesContainer);
+  public create(event: MouseEvent): void {
+    super.create(event);
 
     const startPoint = this.getMousePosition(event);
     this.addPoint(startPoint);
-    this.addPoint(startPoint.clone().addNums(10, 10));
+    this.addPoint(startPoint);
 
     this.generateShape();
+  }
+
+  public createStep(event: MouseEvent): void {
+    const stepPoint = this.getMousePosition(event);
+    const idx = this.points.length - 1;
+
+    this.setPoint(idx, stepPoint);
+    this.addPoint(stepPoint);
+  }
+
+  public modifySelectedStep(event: MouseEvent): void {
+    const stepPoint = this.getMousePosition(event);
+    const idx = this.points.length - 1;
+
+    this.setPoint(idx, stepPoint);
+  }
+
+  public removeSelectedStep(event: MouseEvent): void {
+    const idx = this.points.length - 1;
+    this.removePoint(idx);
   }
 
   public getPoints(): Vector2d[] {
@@ -26,13 +46,16 @@ export class PolyLineShape extends Shape {
 
   public addPoint(point: Vector2d): void {
     this.points.push(point);
-
     this.generatePoints();
   }
 
   public setPoint(index: number, point: Vector2d): void {
     this.points[index] = point;
+    this.generatePoints();
+  }
 
+  public removePoint(index: number): void {
+    this.points.splice(index, 1);
     this.generatePoints();
   }
 

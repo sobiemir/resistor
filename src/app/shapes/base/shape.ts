@@ -1,25 +1,30 @@
 import { Renderer2 } from '@angular/core';
-import { SVGHTMLElement } from '../app.types';
-import { Vector2d } from '../math/vector2d';
+import { SVGHTMLElement } from '../../app.types';
+import { Vector2d } from '../../math/vector2d';
 
 export abstract class Shape {
-  protected shapesContainer: SVGGElement | null = null;
   protected shapeElement: SVGElement | null = null;
-  private initialized = false;
+  private created = false;
 
   public constructor(
     protected renderer: Renderer2,
-    protected viewport: SVGHTMLElement
-  ) {}
+    protected viewport: SVGHTMLElement,
+    protected shapesContainer: SVGGElement
+  ) { }
 
-  public abstract hasMultipleParts(): boolean;
+  public isMultistep(): boolean {
+    return false;
+  }
 
-  public create(event: MouseEvent, shapesContainer: SVGGElement): void {
-    if (this.initialized) {
-      throw new Error('Element was already initialized.');
+  public wasCreated(): boolean {
+    return this.created;
+  }
+
+  public create(event: MouseEvent): void {
+    if (this.wasCreated()) {
+      throw new Error('This element was created before.');
     }
-    this.initialized = true;
-    this.shapesContainer = shapesContainer;
+    this.created = true;
   }
 
   public getMousePosition(event: MouseEvent): Vector2d {
@@ -38,5 +43,16 @@ export abstract class Shape {
       throw new Error('Shape was not created yet.');
     }
     return this.shapeElement;
+  }
+
+  public onMouseDown(event: MouseEvent): Shape | null {
+    if (!this.wasCreated()) {
+      this.create(event);
+    }
+    return this;
+  }
+
+  public onMouseMove(event: MouseEvent): Shape | null {
+    return this;
   }
 }

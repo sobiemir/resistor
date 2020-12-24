@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild, ViewContainerRef } from '@angular/core';
-import { EMouseButton } from './enums/mouse-button.enum';
 import { PolyLineShape } from './shapes/polyline.shape';
-import { Shape } from './shapes/shape';
+import { Shape } from './shapes/base/shape';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +11,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   // public shapesContainer: HTMLElement | null = null;
 
   public shapes: Shape[] = [];
-  public currentElement: Shape | null = null;
+  public currentShape: Shape | null = null;
 
   // @ViewChildren('shapeTemplate', { read: ViewContainerRef })
   // public shapeTemplates: QueryList<ViewContainerRef> = new QueryList();
@@ -24,7 +23,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   public constructor(
     private renderer: Renderer2
-  ) {}
+  ) { }
 
   public ngOnInit(): void {
     // this.viewport = document.getElementById('resistorViewport') as SVGHTMLElement;
@@ -38,44 +37,30 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   public onMouseDown(event: MouseEvent): void {
-    if (event.button === EMouseButton.Right) {
-      this.currentElement = null;
-      return;
-    }
     if (this.shapesContainer == null || this.viewport == null) {
       return;
     }
 
-    const polyline = new PolyLineShape(this.renderer, this.viewport.nativeElement);
-    polyline.create(event, this.shapesContainer.nativeElement);
-
-    // const componentFac = this.componentFactoryResolver.resolveComponentFactory(PolyLineComponent);
-    // const componentRef = this.shapesContainer.createComponent(componentFac);
-
-    // componentRef.instance.initialize(event, this.viewport.nativeElement);
-
-    // console.log(componentRef);
-
-    // this.shapes.push({
-    //   event,
-    //   id: Guid.create().toString()
-    // });
-
-    // if (this.currentElement != null) {
-    //   this.currentElement.addPoint({
-    //     x: xs,
-    //     y: ys
-    //   });
-    // } else {
-    //   this.currentElement = new PolyLineElement({
-    //     x: xs,
-    //     y: ys
-    //   });
-    //   this.elements.push(this.currentElement);
-    // }
+    if (this.currentShape == null) {
+      const polyline = new PolyLineShape(
+        this.renderer,
+        this.viewport.nativeElement,
+        this.shapesContainer.nativeElement
+      );
+      this.currentShape = polyline.onMouseDown(event);
+      if (this.currentShape != null) {
+        this.shapes.push(this.currentShape);
+      }
+    } else {
+      this.currentShape = this.currentShape.onMouseDown(event);
+    }
   }
 
   public onMouseMove(event: MouseEvent): void {
+    if (this.currentShape == null) {
+      return;
+    }
+    this.currentShape.onMouseMove(event);
   }
 
   public onContextMenu(event: MouseEvent): boolean {
