@@ -1,11 +1,36 @@
 /* You can add global styles to this file, and also import other style files */
 @import '~@tabler/core/src/scss/tabler';
 
+$fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
+@import "~@fortawesome/fontawesome-free/scss/fontawesome.scss";
+@import "~@fortawesome/fontawesome-free/scss/solid.scss";
+@import "~@fortawesome/fontawesome-free/scss/brands.scss";
+
 .resistor-container {
   overflow: auto;
-  height: calc(100vh - (2 * #{$content-padding-y}) - #{$navbar-height});
+  // height: calc(100vh - (2 * #{$content-padding-y}) - #{$navbar-height});
+  height: calc(100vh - (2 * #{$content-padding-y}));
 }
 
 body {
   overflow-y: auto;
+}
+
+.btn-tool {
+  border-radius: 0;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  color: white;
+  border: 0;
+}
+.btn-tool.selected {
+  background: #afc6e9;
+  color: black;
+}
+.btn-tool.selected:hover {
+  background: white;
+  color: black;
 }

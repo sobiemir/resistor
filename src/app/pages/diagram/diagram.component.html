@@ -1,0 +1,49 @@
+<aside class="navbar navbar-vertical navbar-expand-lg navbar-dark">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <h1 class="navbar-brand navbar-brand-autodark">
+      <a href=".">
+        <img src="assets/images/logo-64.png" height="32" alt="Resistor" class="navbar-brand-image">
+      </a>
+    </h1>
+    <app-toolbox></app-toolbox>
+  </div>
+</aside>
+<!-- <header class="navbar navbar-expand-md navbar-light d-none d-lg-flex d-print-none">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="navbar-nav flex-row order-md-last">
+    <div class="collapse navbar-collapse" id="navbar-menu">
+    </div>
+  </div>
+</header> -->
+<div class="content">
+  <div class="container-fluid">
+    <div class="bg-white resistor-container">
+      <svg id="resistorViewbox" (contextmenu)="onContextMenu($event)" (mousedown)="onMouseDown($event)"
+        (mousemove)="onMouseMove($event)" height="2000" viewBox="0 0 2000 2000" width="2000">
+        <defs>
+          <pattern height="10" id="resistorSmallGrid" patternUnits="userSpaceOnUse" width="10">
+            <path d="M 10 0 L 0 0 0 10" fill="none" stroke="lightgray" stroke-width="0.5"></path>
+          </pattern>
+          <pattern height="100" id="resistorGrid" patternUnits="userSpaceOnUse" width="100">
+            <rect height="100" width="100" fill="url(#resistorSmallGrid)"></rect>
+            <path d="M 100 0 L 0 0 0 100" fill="none" stroke="lightgray" stroke-width="1"></path>
+          </pattern>
+        </defs>
+        <rect height="2000" id="backgroundGrid" width="2000" fill="url(#resistorGrid)">
+        </rect>
+        <g id="resistorShapesContainer">
+        </g>
+        <g id="resistorConnectorsContainer">
+        </g>
+        <g id="resistorControlsContainer">
+        </g>
+      </svg>
+    </div>
+  </div>
+</div>

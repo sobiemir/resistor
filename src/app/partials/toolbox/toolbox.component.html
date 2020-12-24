@@ -1,0 +1,8 @@
+<div class="collapse navbar-collapse" id="navbar-menu">
+  <div class="d-flex my-2">
+    <div class="btn btn-tool {{item.isSelected() ? 'selected' : ''}}" *ngFor="let item of toolboxItems"
+      (click)="onItemClick($event, item)">
+      <i class="{{item.getIcon()}}"></i>
+    </div>
+  </div>
+</div>

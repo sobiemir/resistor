@@ -1,18 +1,18 @@
 import { Renderer2 } from '@angular/core';
 import { SVGHTMLElement } from 'src/app/app.types';
-import { Point2D } from 'src/app/math/point2d';
-import { BasicShape } from './basic.shape';
+import { BasicShape } from './basic-shape';
 
 export abstract class Shape extends BasicShape {
   protected _shapeElement: SVGElement | null = null;
+  protected _previewElement: SVGElement | null = null;
   protected _created = false;
 
   public constructor(
-    protected renderer: Renderer2,
-    protected viewport: SVGHTMLElement,
-    protected shapesContainer: SVGGElement
+    protected _renderer: Renderer2,
+    protected _viewport: SVGHTMLElement,
+    protected _shapesContainer: SVGGElement
   ) {
-    super(renderer, viewport);
+    super(_renderer, _viewport);
   }
 
   public isMultistep(): boolean {

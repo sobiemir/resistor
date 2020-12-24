@@ -1,7 +1,7 @@
-import { Point2D } from '../math/point2d';
-import { MultistepShape } from './base/multistep.shape';
+import { Point2D } from '../../math/point2d';
+import { MultistepShape } from '../base/multistep-shape';
 
-export class PolyLineShape extends MultistepShape {
+export class PolylineShape extends MultistepShape {
   public pointsAttribute = '';
 
   private _points: Point2D[] = [];
@@ -106,12 +106,19 @@ export class PolyLineShape extends MultistepShape {
   }
 
   private generateShape(): void {
-    const polyline = this.renderer.createElement('polyline', 'svg');
+    const polyline = this._renderer.createElement('polyline', 'svg');
     this._shapeElement = polyline;
 
     this.refreshPoints();
     this.refreshStyles();
 
-    this.renderer.appendChild(this.shapesContainer, this._shapeElement);
+    this._renderer.appendChild(this._shapesContainer, this._shapeElement);
+  }
+
+  private generatePreview(): void {
+    const path = this._renderer.createElement('path', 'svg');
+    this._previewElement = path;
+
+    this._renderer.appendChild(this._shapesContainer, this._shapeElement);
   }
 }

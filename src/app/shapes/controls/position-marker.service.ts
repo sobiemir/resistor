@@ -1,19 +1,26 @@
 import { Renderer2 } from '@angular/core';
 import { SVGHTMLElement } from 'src/app/app.types';
 import { Point2D } from '../../math/point2d';
-import { BasicShape } from '../base/basic.shape';
+import { BasicShape } from '../base/basic-shape';
 
-export class PositionMarker extends BasicShape {
+export class PositionMarkerService extends BasicShape {
   private _position: Point2D = new Point2D(0, 0);
   private _size = 4;
+  // private _viewport: SVGHTMLElement | null = null;
+  private _controlsContainer: SVGGElement | null = null;
 
-  public constructor(
-    protected renderer: Renderer2,
-    protected viewport: SVGHTMLElement,
-    protected controlsContainer: SVGGElement
+  // public constructor(
+  //   protected _renderer: Renderer2,
+  // ) {
+  //   super(_renderer, _viewport);
+  //   this.generateMarker();
+  // }
+
+  public initialize(
+    viewport: SVGHTMLElement,
+    controlsContainer: SVGGElement
   ) {
-    super(renderer, viewport);
-    this.generateMarker();
+
   }
 
   public getSize(): number {
@@ -34,11 +41,11 @@ export class PositionMarker extends BasicShape {
     this.refreshPosition();
   }
 
-  public onMouseDown(event: MouseEvent): PositionMarker | null {
+  public onMouseDown(event: MouseEvent): PositionMarkerService | null {
     return this;
   }
 
-  public onMouseMove(event: MouseEvent): PositionMarker | null {
+  public onMouseMove(event: MouseEvent): PositionMarkerService | null {
     const currPoint = this.getMousePosition(event);
     this.setPosition(currPoint);
 
@@ -67,13 +74,12 @@ export class PositionMarker extends BasicShape {
   }
 
   private generateMarker(): void {
-    const polyline = this.renderer.createElement('circle', 'svg');
+    const polyline = this._renderer.createElement('circle', 'svg');
     this._shapeElement = polyline;
 
     this.refreshPosition();
     this.refreshStyles();
 
-    console.log(this.controlsContainer);
-    this.renderer.appendChild(this.controlsContainer, this._shapeElement);
+    this._renderer.appendChild(this._controlsContainer, this._shapeElement);
   }
 }

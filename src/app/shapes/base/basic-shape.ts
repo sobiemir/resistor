@@ -1,5 +1,5 @@
 import { Point2D } from 'src/app/math/point2d';
-import { ShapeConfiguration } from './shape.configuration';
+import { ShapeConfiguration } from './shape-configuration';
 
 export abstract class BasicShape extends ShapeConfiguration {
   protected _shapeElement: SVGElement | null = null;
@@ -20,7 +20,7 @@ export abstract class BasicShape extends ShapeConfiguration {
   }
 
   public getMousePosition(event: MouseEvent): Point2D {
-    const ctm = this.viewport?.getScreenCTM();
+    const ctm = this._viewport?.getScreenCTM();
     if (ctm == null) {
       throw new Error('There was an undefined error while executing getMousePosition function.');
     }
