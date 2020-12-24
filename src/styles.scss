@@ -1,1 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
+@import '~@tabler/core/src/scss/tabler';
+
+.resistor-container {
+  overflow: auto;
+  height: calc(100vh - (2 * #{$content-padding-y}) - #{$navbar-height});
+}
+
+body {
+  overflow-y: auto;
+}
