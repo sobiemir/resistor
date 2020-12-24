@@ -1,5 +1,5 @@
 import { Renderer2 } from '@angular/core';
-import { SVGHTMLElement } from 'src/app/app.types';
+import { DiagramService } from 'src/app/pages/diagram/diagram.service';
 
 export abstract class ShapeConfiguration {
   protected static _snapToGrid = true;
@@ -7,7 +7,7 @@ export abstract class ShapeConfiguration {
 
   public constructor(
     protected _renderer: Renderer2,
-    protected _viewport: SVGHTMLElement
+    protected _diagramService: DiagramService
   ) { }
 
   public static setSnapToGrid(snap: boolean, size: number): void {

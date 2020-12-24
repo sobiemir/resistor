@@ -47,4 +47,18 @@ export class ToolboxService {
     }
     this._selected.onMouseMove(event);
   }
+
+  public onMouseEnter(event: MouseEvent): void {
+    if (this._selected === null) {
+      return;
+    }
+    this._selected.onMouseEnter(event);
+  }
+
+  public onMouseLeave(event: MouseEvent): void {
+    if (this._selected === null) {
+      return;
+    }
+    this._selected.onMouseLeave(event);
+  }
 }

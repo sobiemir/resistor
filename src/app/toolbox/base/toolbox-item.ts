@@ -1,10 +1,12 @@
 import { IToolboxItem } from 'src/interfaces/toolbox-item.interface';
 
 export abstract class ToolboxItem implements IToolboxItem {
-  private _selected = false;
+  protected _selected = false;
 
   public abstract onMouseDown(event: MouseEvent): void;
   public abstract onMouseMove(event: MouseEvent): void;
+  public abstract onMouseEnter(event: MouseEvent): void;
+  public abstract onMouseLeave(event: MouseEvent): void;
   public abstract getIcon(): string;
 
   public constructor() {

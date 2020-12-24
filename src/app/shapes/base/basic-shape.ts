@@ -20,7 +20,7 @@ export abstract class BasicShape extends ShapeConfiguration {
   }
 
   public getMousePosition(event: MouseEvent): Point2D {
-    const ctm = this._viewport?.getScreenCTM();
+    const ctm = this._diagramService.getViewbox().getScreenCTM();
     if (ctm == null) {
       throw new Error('There was an undefined error while executing getMousePosition function.');
     }

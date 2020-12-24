@@ -22,6 +22,14 @@ export class DiagramComponent implements OnInit {
     this._toolboxService.onMouseMove(event);
   }
 
+  public onMouseEnter(event: MouseEvent): void {
+    this._toolboxService.onMouseEnter(event);
+  }
+
+  public onMouseLeave(event: MouseEvent): void {
+    this._toolboxService.onMouseLeave(event);
+  }
+
   public onContextMenu(event: MouseEvent): boolean {
     event.stopPropagation();
     event.cancelBubble = true;

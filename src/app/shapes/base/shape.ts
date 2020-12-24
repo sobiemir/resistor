@@ -1,5 +1,6 @@
 import { Renderer2 } from '@angular/core';
 import { SVGHTMLElement } from 'src/app/app.types';
+import { DiagramService } from 'src/app/pages/diagram/diagram.service';
 import { BasicShape } from './basic-shape';
 
 export abstract class Shape extends BasicShape {
@@ -9,10 +10,9 @@ export abstract class Shape extends BasicShape {
 
   public constructor(
     protected _renderer: Renderer2,
-    protected _viewport: SVGHTMLElement,
-    protected _shapesContainer: SVGGElement
+    protected _diagramService: DiagramService
   ) {
-    super(_renderer, _viewport);
+    super(_renderer, _diagramService);
   }
 
   public isMultistep(): boolean {

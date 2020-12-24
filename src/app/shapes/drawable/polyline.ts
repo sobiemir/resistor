@@ -112,13 +112,6 @@ export class PolylineShape extends MultistepShape {
     this.refreshPoints();
     this.refreshStyles();
 
-    this._renderer.appendChild(this._shapesContainer, this._shapeElement);
-  }
-
-  private generatePreview(): void {
-    const path = this._renderer.createElement('path', 'svg');
-    this._previewElement = path;
-
-    this._renderer.appendChild(this._shapesContainer, this._shapeElement);
+    this._renderer.appendChild(this._diagramService.getShapesContainer(), this._shapeElement);
   }
 }
