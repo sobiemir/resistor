@@ -1,113 +1,79 @@
+import { SVGGHTMLElement } from 'src/app/app.types';
 import { Vector2D } from 'src/app/math/vector2d';
 import { Point2D } from '../../math/point2d';
-import { MultistepShape } from '../base/multistep-shape';
+import { ShapeBase } from '../base/shape-base';
 
-export class PolylineShape extends MultistepShape {
+export class PolylineShape extends ShapeBase {
   public pointsAttribute = '';
 
-  private _points: Point2D[] = [];
-  private _vectors: Vector2D[] = [];
+  protected _points: Point2D[] = [];
+  protected _vectors: Vector2D[] = [];
 
-  public onCreateStart(event: MouseEvent): void {
-    super.onCreateStart(event);
-
-    const startPoint = this.getMousePosition(event);
-    this.addPoint(startPoint);
-    this.addPoint(startPoint);
-
+  public initialize(points: Point2D[]): void {
+    this.setPoints(points);
     this.generateShape();
-  }
-
-  public onCreateStep(event: MouseEvent): void {
-    const currPoint = this.getMousePosition(event);
-    const idx = this._points.length - 1;
-
-    const newPoint = event.ctrlKey
-      ? this.lockPointHV(idx, currPoint)
-      : currPoint;
-
-    const lastPoint = this._points.length > 1
-      ? this._points[this._points.length - 2]
-      : newPoint;
-
-    // prevent adding two same points in container
-    if (lastPoint.isEqual(newPoint)) {
-      return;
-    }
-    this.setPoint(idx, newPoint);
-
-    // add vector for polyline (require at least 2 points)
-    const pa = this._points[this._points.length - 1];
-    const pb = this._points[this._points.length - 2];
-
-    this._vectors.push(Vector2D.fromPoints(pa, pb));
-    this.addPoint(newPoint);
-  }
-
-  public modifySelectedStep(event: MouseEvent): void {
-    const currPoint = this.getMousePosition(event);
-    const idx = this._points.length - 1;
-
-    const newPoint = event.ctrlKey
-      ? this.lockPointHV(idx, currPoint)
-      : currPoint;
-
-    this.setPoint(idx, newPoint);
-  }
-
-  public removeSelectedStep(event: MouseEvent): void {
-    const idx = this._points.length - 1;
-    this.removePoint(idx);
   }
 
   public getPoints(): Point2D[] {
     return this._points;
   }
 
+  public setPoints(points: Point2D[]): void {
+    if (points.length < 2) {
+      throw new Error('Polyline requires at least 2 defined points.');
+    }
+    this._points.push(...points);
+    this.refreshPoints();
+  }
+
   public addPoint(point: Point2D): void {
     this._points.push(point);
-    this.generatePoints();
+    this.refreshPoints();
   }
 
   public setPoint(index: number, point: Point2D): void {
     this._points[index] = point;
-    this.generatePoints();
+    this.refreshPoints();
   }
 
-  public removePoint(index: number): void {
+  public removePoint(index: number = -1): void {
+    if (index === -1) {
+      index = this._points.length - 1;
+    }
+    if (this._points.length <= 2) {
+      throw new Error('Polyline requires at least 2 defined points.');
+    }
     this._points.splice(index, 1);
+    this.refreshPoints();
+  }
+
+  protected getSVGContainer(): SVGGHTMLElement {
+    return this._diagramService.getShapesContainer();
+  }
+
+  private generateShape(): void {
+    const polyline = this._renderer.createElement('polyline', 'svg');
+    this._svgElement = polyline;
+
+    this.refreshPoints();
+    this.setStyles({
+      fill: 'none',
+      stroke: 'black',
+      strokeWidth: '1'
+    });
+    this.create();
+  }
+
+  private refreshPoints(): void {
+    if (this._svgElement == null) {
+      return;
+    }
     this.generatePoints();
+    this.generateVectors();
+    this._svgElement.setAttribute('points', this.pointsAttribute);
   }
 
-  protected refreshPoints(): void {
-    if (this._shapeElement == null) {
-      return;
-    }
-    this._shapeElement.setAttribute('points', this.pointsAttribute);
-  }
-
-  protected refreshStyles(): void {
-    if (this._shapeElement == null) {
-      return;
-    }
-    this._shapeElement.style.fill = 'none';
-    this._shapeElement.style.stroke = 'black';
-    this._shapeElement.style.strokeWidth = '1';
-  }
-
-  protected lockPointHV(index: number, mousePosition: Point2D): Point2D {
-    const prevPoint = this._points[index - 1];
-
-    const sx = Math.abs(mousePosition.x - prevPoint.x);
-    const sy = Math.abs(mousePosition.y - prevPoint.y);
-
-    if (sx > sy) {
-      return new Point2D(mousePosition.x, prevPoint.y);
-    }
-    return new Point2D(prevPoint.x, mousePosition.y);
-  }
-
-  protected generatePoints(): void {
+  private generatePoints(): void {
     let stringPoints = '';
     for (let idx = 0; idx < this._points.length; ++idx) {
       const point = this._points[idx];
@@ -118,16 +84,13 @@ export class PolylineShape extends MultistepShape {
       }
     }
     this.pointsAttribute = stringPoints;
-    this.refreshPoints();
   }
 
-  protected generateShape(): void {
-    const polyline = this._renderer.createElement('polyline', 'svg');
-    this._shapeElement = polyline;
-
-    this.refreshPoints();
-    this.refreshStyles();
-
-    this._renderer.appendChild(this._diagramService.getShapesContainer(), this._shapeElement);
+  private generateVectors(): void {
+    this._vectors = [];
+    for (let index = 1; index < this._points.length; ++index) {
+      const vector = Vector2D.fromPoints(this._points[index - 1], this._points[index]);
+      this._vectors.push(vector);
+    }
   }
 }

@@ -1,20 +1,20 @@
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 import { DiagramService } from 'src/app/pages/diagram/diagram.service';
 import { Point2D } from '../math/point2d';
+import { BuilderOperations } from '../toolbox/base/builder-operations';
 import { WireConnectorShape } from './connectors/wire-connector';
 
 @Injectable({
   providedIn: 'root',
 })
-export class WireConnectorService {
-  private _renderer: Renderer2;
-  private _connectors: WireConnectorShape[] = [];
+export class WireConnectorService extends BuilderOperations {
+  protected _connectors: WireConnectorShape[] = [];
 
   public constructor(
     protected _rendererFactory: RendererFactory2,
     protected _diagramService: DiagramService
   ) {
-    this._renderer = _rendererFactory.createRenderer(null, null);
+    super(_rendererFactory.createRenderer(null, null), _diagramService);
   }
 
   public create(position: Point2D): void {

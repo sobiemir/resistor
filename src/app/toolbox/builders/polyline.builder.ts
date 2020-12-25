@@ -1,43 +1,60 @@
 import { Renderer2 } from '@angular/core';
+import { EMouseButton } from 'src/app/enums/mouse-button.enum';
+import { Point2D } from 'src/app/math/point2d';
 import { DiagramService } from 'src/app/pages/diagram/diagram.service';
 import { PolylineShape } from 'src/app/shapes/drawable/polyline';
 import { PositionMarkerService } from 'src/app/shapes/position-marker.service';
-import { Shape } from '../../shapes/base/shape';
+import { ShapeService } from 'src/app/shapes/shape.service';
 import { ToolboxItem } from '../base/toolbox-item';
 
 export class PolylineBuilder extends ToolboxItem {
-  public currentShape: Shape | null = null;
+  protected _currentShape: PolylineShape | null = null;
 
   public constructor(
-    private _renderer: Renderer2,
-    private _diagramService: DiagramService,
-    private _positionMarkerService: PositionMarkerService,
+    protected _renderer: Renderer2,
+    protected _diagramService: DiagramService,
+    protected _positionMarkerService: PositionMarkerService,
+    protected _shapeService: ShapeService
   ) {
-    super();
+    super(_renderer, _diagramService);
   }
 
   public getIcon(): string {
     return 'fas fa-draw-polygon';
   }
 
-  onMouseDown(event: MouseEvent): void {
-    if (this.currentShape == null) {
-      const polyline = new PolylineShape(
-        this._renderer,
-        this._diagramService
-      );
-      this.currentShape = polyline.onMouseDown(event);
-      // if (this.currentShape != null) {
-      // this.shapes.push(this.currentShape);
-      // }
+  public onMouseDown(event: MouseEvent): void {
+    if (this._currentShape != null) {
+      if (event.button === EMouseButton.Right) {
+        this.onCreateEnd(event);
+      } else {
+        this.onCreateStep(event);
+      }
     } else {
-      this.currentShape = this.currentShape.onMouseDown(event);
+      this.onCreateStart(event);
     }
   }
 
-  onMouseMove(event: MouseEvent): void {
+  public onMouseMove(event: MouseEvent): void {
     this._positionMarkerService.onMouseMove(event);
-    this.currentShape?.onMouseMove(event);
+
+    if (this._currentShape == null) {
+      return;
+    }
+    const mousePoint = this.getMousePosition(event);
+    const points = this._currentShape.getPoints();
+
+    if (points.length < 2) {
+      return;
+    }
+    const lastIndex = points.length - 1;
+    const penultPoint = points[lastIndex - 1];
+
+    const newPoint = event.ctrlKey
+      ? this.lockPointHV(penultPoint, mousePoint)
+      : mousePoint;
+
+    this._currentShape.setPoint(lastIndex, newPoint);
   }
 
   public onMouseEnter(event: MouseEvent): void {
@@ -47,4 +64,126 @@ export class PolylineBuilder extends ToolboxItem {
   public onMouseLeave(event: MouseEvent): void {
     this._positionMarkerService.setVisible(false);
   }
+
+  public onCreateStart(event: MouseEvent): void {
+    const polyline = new PolylineShape(this._renderer, this._diagramService);
+    const mousePoint = this.getMousePosition(event);
+
+    this._currentShape = polyline;
+    this._currentShape.initialize([mousePoint, mousePoint]);
+  }
+
+  public onCreateStep(event: MouseEvent): void {
+    if (this._currentShape == null) {
+      return;
+    }
+    const mousePoint = this.getMousePosition(event);
+    const points = this._currentShape.getPoints();
+
+    if (points.length < 2) {
+      return;
+    }
+    const lastIndex = points.length - 1;
+    const penultPoint = points[lastIndex - 1];
+
+    const newPoint = event.ctrlKey
+      ? this.lockPointHV(penultPoint, mousePoint)
+      : mousePoint;
+
+    // prevent adding two same points in container
+    if (penultPoint.isEqual(newPoint)) {
+      return;
+    }
+    this._currentShape.setPoint(lastIndex, newPoint);
+
+    // add new point for moving
+    this._currentShape.addPoint(newPoint);
+  }
+
+  public onCreateEnd(event: MouseEvent): void {
+    if (this._currentShape == null) {
+      return;
+    }
+    if (this._currentShape.getPoints().length <= 2) {
+      this._currentShape.destroy();
+    } else {
+      this._currentShape.removePoint();
+    }
+    this._currentShape = null;
+  }
+
+  protected lockPointHV(checkPoint: Point2D, mousePosition: Point2D): Point2D {
+    if (this._currentShape == null) {
+      throw new Error('Shape was not yet initialized!')
+    }
+
+    const sx = Math.abs(mousePosition.x - checkPoint.x);
+    const sy = Math.abs(mousePosition.y - checkPoint.y);
+
+    if (sx > sy) {
+      return new Point2D(mousePosition.x, checkPoint.y);
+    }
+    return new Point2D(checkPoint.x, mousePosition.y);
+  }
 }
+
+
+
+
+
+
+  // public onCreateStart(event: MouseEvent): void {
+  //   super.onCreateStart(event);
+
+  //   const startPoint = this.getMousePosition(event);
+  //   this.addPoint(startPoint);
+  //   this.addPoint(startPoint);
+
+  //   this.generateShape();
+  // }
+
+  // public onCreateStep(event: MouseEvent): void {
+  //   const currPoint = this.getMousePosition(event);
+  //   const idx = this._points.length - 1;
+
+  //   const newPoint = event.ctrlKey
+  //     ? this.lockPointHV(idx, currPoint)
+  //     : currPoint;
+
+  //   const lastPoint = this._points.length > 1
+  //     ? this._points[this._points.length - 2]
+  //     : newPoint;
+
+  //   // prevent adding two same points in container
+  //   if (lastPoint.isEqual(newPoint)) {
+  //     return;
+  //   }
+  //   this.setPoint(idx, newPoint);
+
+  //   // add vector for polyline (require at least 2 points)
+  //   const pa = this._points[this._points.length - 1];
+  //   const pb = this._points[this._points.length - 2];
+
+  //   this._vectors.push(Vector2D.fromPoints(pa, pb));
+  //   this.addPoint(newPoint);
+  // }
+
+  // public onCreateEnd(event: MouseEvent): void {
+  //   super.onCreateEnd(event);
+  // }
+
+  // public modifySelectedStep(event: MouseEvent): void {
+  //   const currPoint = this.getMousePosition(event);
+  //   const idx = this._points.length - 1;
+
+  //   const newPoint = event.ctrlKey
+  //     ? this.lockPointHV(idx, currPoint)
+  //     : currPoint;
+
+  //   this.setPoint(idx, newPoint);
+  // }
+
+  // public removeSelectedStep(event: MouseEvent): void {
+  //   const idx = this._points.length - 1;
+  //   this.removePoint(idx);
+  // }

@@ -1,6 +1,7 @@
 import { IToolboxItem } from 'src/interfaces/toolbox-item.interface';
+import { BuilderOperations } from './builder-operations';
 
-export abstract class ToolboxItem implements IToolboxItem {
+export abstract class ToolboxItem extends BuilderOperations implements IToolboxItem {
   protected _selected = false;
 
   public abstract onMouseDown(event: MouseEvent): void;
@@ -8,9 +9,6 @@ export abstract class ToolboxItem implements IToolboxItem {
   public abstract onMouseEnter(event: MouseEvent): void;
   public abstract onMouseLeave(event: MouseEvent): void;
   public abstract getIcon(): string;
-
-  public constructor() {
-  }
 
   public isSelected(): boolean {
     return this._selected;

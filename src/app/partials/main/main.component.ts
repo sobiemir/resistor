@@ -1,7 +1,4 @@
 import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
-import { Point2D } from 'src/app/math/point2d';
-import { WireConnectorService } from 'src/app/shapes/wire-connector.service';
-import { Shape } from '../../shapes/base/shape';
 // import { PositionMarker } from './shapes/controls/position-marker.service';
 // import { ToolboxItem } from './toolbox/base/toolbox-item';
 
@@ -11,8 +8,6 @@ import { Shape } from '../../shapes/base/shape';
   styleUrls: ['./main.component.scss']
 })
 export class MainComponent implements OnInit, AfterViewInit {
-  public currentShape: Shape | null = null;
-  public shapes: Shape[] = [];
   // public positionMarker: PositionMarker | null = null;
 
   // public shapesContainer: ElementRef | null = null;
