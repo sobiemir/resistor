@@ -20,6 +20,7 @@ export class PositionMarkerService extends BuilderOperations {
 
   public create(): void {
     const marker = new PositionMarkerShape(this._renderer, this._diagramService);
+    marker.initialize(new Point2D(0, 0), 4);
     this._markers.push(marker);
 
     this._activeMarker = marker;

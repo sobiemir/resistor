@@ -49,102 +49,49 @@ export class EllipseBuilder extends ToolboxItem {
   }
 
   public onMouseMove(event: MouseEvent): void {
+    this._positionMarkerService.onMouseMove(event);
+
     if (this._currentShape == null) {
       return;
     }
-
     const mousePoint = this.getMousePosition(event);
     const vector = new Vector2D(this._startPoint, mousePoint);
 
-    this._currentShape.setRadius(vector.getLength());
+    let rx = 0;
+    let ry = 0;
 
-    // this._positionMarkerService.onMouseMove(event);
+    if (event.shiftKey) {
+      rx = vector.x;
+      ry = vector.y;
 
-    // if (this._currentShape == null) {
-    //   return;
-    // }
-    // const mousePoint = this.getMousePosition(event);
-    // const points = this._currentShape.getPoints();
+      if (event.ctrlKey) {
+        rx = ry > rx ? ry : rx;
+        ry = rx > ry ? rx : ry;
+      }
+      this._currentShape.setPosition(this._startPoint);
+      this._currentShape.setRadius(Math.abs(rx), Math.abs(ry));
+    } else {
+      const startPoint = this._startPoint.clone();
 
-    // if (points.length < 2) {
-    //   return;
-    // }
-    // const lastIndex = points.length - 1;
-    // const penultPoint = points[lastIndex - 1];
+      rx = vector.x / 2;
+      ry = vector.y / 2;
 
-    // const newPoint = event.ctrlKey
-    //   ? this.lockPointHV(penultPoint, mousePoint)
-    //   : mousePoint;
+      if (event.ctrlKey) {
+        rx = ry > rx ? ry : rx;
+        ry = rx > ry ? rx : ry;
+      }
 
-    // this._currentShape.setPoint(lastIndex, newPoint);
+      startPoint.add(rx, ry);
+      this._currentShape.setPosition(startPoint);
+      this._currentShape.setRadius(Math.abs(rx), Math.abs(ry));
+    }
   }
 
   public onMouseEnter(event: MouseEvent): void {
-    // this._positionMarkerService.setVisible(true);
+    this._positionMarkerService.setVisible(true);
   }
 
   public onMouseLeave(event: MouseEvent): void {
-    // this._positionMarkerService.setVisible(false);
-  }
-
-  public onCreateStart(event: MouseEvent): void {
-    // const polyline = new PolylineShape(this._renderer, this._diagramService);
-    // const mousePoint = this.getMousePosition(event);
-
-    // this._currentShape = polyline;
-    // this._currentShape.initialize([mousePoint, mousePoint]);
-  }
-
-  public onCreateStep(event: MouseEvent): void {
-    // if (this._currentShape == null) {
-    //   return;
-    // }
-    // const mousePoint = this.getMousePosition(event);
-    // const points = this._currentShape.getPoints();
-
-    // if (points.length < 2) {
-    //   return;
-    // }
-    // const lastIndex = points.length - 1;
-    // const penultPoint = points[lastIndex - 1];
-
-    // const newPoint = event.ctrlKey
-    //   ? this.lockPointHV(penultPoint, mousePoint)
-    //   : mousePoint;
-
-    // // prevent adding two same points in container
-    // if (penultPoint.isEqual(newPoint)) {
-    //   return;
-    // }
-    // this._currentShape.setPoint(lastIndex, newPoint);
-
-    // // add new point for moving
-    // this._currentShape.addPoint(newPoint);
-  }
-
-  public onCreateEnd(event: MouseEvent): void {
-    // if (this._currentShape == null) {
-    //   return;
-    // }
-    // if (this._currentShape.getPoints().length <= 2) {
-    //   this._currentShape.destroy();
-    // } else {
-    //   this._currentShape.removePoint();
-    // }
-    // this._currentShape = null;
-  }
-
-  protected lockPointHV(checkPoint: Point2D, mousePosition: Point2D): Point2D {
-    if (this._currentShape == null) {
-      throw new Error('Shape was not yet initialized!');
-    }
-
-    const sx = Math.abs(mousePosition.x - checkPoint.x);
-    const sy = Math.abs(mousePosition.y - checkPoint.y);
-
-    if (sx > sy) {
-      return new Point2D(mousePosition.x, checkPoint.y);
-    }
-    return new Point2D(checkPoint.x, mousePosition.y);
+    this._positionMarkerService.setVisible(false);
   }
 }

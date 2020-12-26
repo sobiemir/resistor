@@ -21,10 +21,6 @@ export class WireConnectorService extends BuilderOperations {
     const marker = new WireConnectorShape(this._renderer, this._diagramService);
     marker.initialize(position);
     this._connectors.push(marker);
-
-    const index = this._connectors.length - 1;
-    // this.setPosition(index, position);
-    this.setVisible(index, true);
   }
 
   public getConnectors(): WireConnectorShape[] {
