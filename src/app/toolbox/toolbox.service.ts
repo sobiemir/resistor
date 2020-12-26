@@ -41,6 +41,13 @@ export class ToolboxService {
     this._selected.onMouseDown(event);
   }
 
+  public onMouseUp(event: MouseEvent): void {
+    if (this._selected === null) {
+      return;
+    }
+    this._selected.onMouseUp(event);
+  }
+
   public onMouseMove(event: MouseEvent): void {
     if (this._selected === null) {
       return;

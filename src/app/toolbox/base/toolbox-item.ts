@@ -5,6 +5,7 @@ export abstract class ToolboxItem extends BuilderOperations implements IToolboxI
   protected _selected = false;
 
   public abstract onMouseDown(event: MouseEvent): void;
+  public abstract onMouseUp(event: MouseEvent): void;
   public abstract onMouseMove(event: MouseEvent): void;
   public abstract onMouseEnter(event: MouseEvent): void;
   public abstract onMouseLeave(event: MouseEvent): void;

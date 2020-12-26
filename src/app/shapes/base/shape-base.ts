@@ -1,7 +1,7 @@
 import { Renderer2 } from '@angular/core';
 import { SVGGHTMLElement } from 'src/app/app.types';
 import { DiagramService } from 'src/app/pages/diagram/diagram.service';
-import { CSSStyleInterface } from 'src/interfaces/css-style.interface';
+import { ICSSOptions } from 'src/interfaces/css-options.interface';
 
 export abstract class ShapeBase {
   protected _svgElement: SVGElement | null = null;
@@ -30,7 +30,7 @@ export abstract class ShapeBase {
       : 'none';
   }
 
-  public setStyles(styles: CSSStyleInterface): void {
+  public setStyles(styles: ICSSOptions): void {
     if (this._svgElement == null) {
       throw new Error('Shape was not yet initialized!');
     }

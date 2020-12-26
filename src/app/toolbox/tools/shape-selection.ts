@@ -8,6 +8,9 @@ export class ShapeSelectionTool extends ToolboxItem {
   public onMouseDown(event: MouseEvent): void {
   }
 
+  public onMouseUp(event: MouseEvent): void {
+  }
+
   public onMouseMove(event: MouseEvent): void {
   }
 

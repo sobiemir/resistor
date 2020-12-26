@@ -35,6 +35,9 @@ export class PolylineBuilder extends ToolboxItem {
     }
   }
 
+  public onMouseUp(event: MouseEvent): void {
+  }
+
   public onMouseMove(event: MouseEvent): void {
     this._positionMarkerService.onMouseMove(event);
 
@@ -114,7 +117,7 @@ export class PolylineBuilder extends ToolboxItem {
 
   protected lockPointHV(checkPoint: Point2D, mousePosition: Point2D): Point2D {
     if (this._currentShape == null) {
-      throw new Error('Shape was not yet initialized!')
+      throw new Error('Shape was not yet initialized!');
     }
 
     const sx = Math.abs(mousePosition.x - checkPoint.x);
@@ -126,64 +129,3 @@ export class PolylineBuilder extends ToolboxItem {
     return new Point2D(checkPoint.x, mousePosition.y);
   }
 }
-
-
-
-
-
-
-  // public onCreateStart(event: MouseEvent): void {
-  //   super.onCreateStart(event);
-
-  //   const startPoint = this.getMousePosition(event);
-  //   this.addPoint(startPoint);
-  //   this.addPoint(startPoint);
-
-  //   this.generateShape();
-  // }
-
-  // public onCreateStep(event: MouseEvent): void {
-  //   const currPoint = this.getMousePosition(event);
-  //   const idx = this._points.length - 1;
-
-  //   const newPoint = event.ctrlKey
-  //     ? this.lockPointHV(idx, currPoint)
-  //     : currPoint;
-
-  //   const lastPoint = this._points.length > 1
-  //     ? this._points[this._points.length - 2]
-  //     : newPoint;
-
-  //   // prevent adding two same points in container
-  //   if (lastPoint.isEqual(newPoint)) {
-  //     return;
-  //   }
-  //   this.setPoint(idx, newPoint);
-
-  //   // add vector for polyline (require at least 2 points)
-  //   const pa = this._points[this._points.length - 1];
-  //   const pb = this._points[this._points.length - 2];
-
-  //   this._vectors.push(Vector2D.fromPoints(pa, pb));
-  //   this.addPoint(newPoint);
-  // }
-
-  // public onCreateEnd(event: MouseEvent): void {
-  //   super.onCreateEnd(event);
-  // }
-
-  // public modifySelectedStep(event: MouseEvent): void {
-  //   const currPoint = this.getMousePosition(event);
-  //   const idx = this._points.length - 1;
-
-  //   const newPoint = event.ctrlKey
-  //     ? this.lockPointHV(idx, currPoint)
-  //     : currPoint;
-
-  //   this.setPoint(idx, newPoint);
-  // }
-
-  // public removeSelectedStep(event: MouseEvent): void {
-  //   const idx = this._points.length - 1;
-  //   this.removePoint(idx);
-  // }

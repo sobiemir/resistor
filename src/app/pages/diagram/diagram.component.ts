@@ -25,6 +25,10 @@ export class DiagramComponent implements OnInit, AfterViewInit {
     this._toolboxService.onMouseDown(event);
   }
 
+  public onMouseUp(event: MouseEvent): void {
+    this._toolboxService.onMouseUp(event);
+  }
+
   public onMouseMove(event: MouseEvent): void {
     this._toolboxService.onMouseMove(event);
   }

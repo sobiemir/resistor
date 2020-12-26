@@ -1,4 +1,4 @@
-export interface CSSStyleInterface {
+export interface ICSSOptions {
   [key: string]: any;
 
   fill?: string;

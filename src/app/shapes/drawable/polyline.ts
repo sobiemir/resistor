@@ -89,7 +89,7 @@ export class PolylineShape extends ShapeBase {
   private generateVectors(): void {
     this._vectors = [];
     for (let index = 1; index < this._points.length; ++index) {
-      const vector = Vector2D.fromPoints(this._points[index - 1], this._points[index]);
+      const vector = new Vector2D(this._points[index - 1], this._points[index]);
       this._vectors.push(vector);
     }
   }

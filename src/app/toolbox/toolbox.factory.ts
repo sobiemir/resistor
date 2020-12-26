@@ -3,6 +3,7 @@ import { IToolboxItem } from 'src/interfaces/toolbox-item.interface';
 import { DiagramService } from '../pages/diagram/diagram.service';
 import { PositionMarkerService } from '../shapes/position-marker.service';
 import { ShapeService } from '../shapes/shape.service';
+import { EllipseBuilder } from './builders/ellipse.builder';
 import { PolylineBuilder } from './builders/polyline.builder';
 import { ShapeSelectionTool } from './tools/shape-selection';
 
@@ -29,6 +30,12 @@ export class ToolboxFactory {
       this._diagramService
     ));
     primaryTools.push(new PolylineBuilder(
+      this._renderer,
+      this._diagramService,
+      this._positionMarkerService,
+      this._shapeService
+    ));
+    primaryTools.push(new EllipseBuilder(
       this._renderer,
       this._diagramService,
       this._positionMarkerService,

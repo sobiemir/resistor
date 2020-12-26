@@ -5,23 +5,29 @@ export class Vector2D implements IPoint2D {
   public x = 0;
   public y = 0;
 
-  public static fromPoints(p1: Point2D, p2: Point2D): Vector2D {
-    const x = p2.x - p1.x;
-    const y = p2.y - p1.y;
-
-    return new Vector2D(x, y);
-  }
-
-  public constructor(x: number, y: number) {
-    this.x = x;
-    this.y = y;
+  public constructor(x: number, y: number);
+  public constructor(p1: Point2D, p2: Point2D);
+  public constructor(x1: number, y1: number, x2: number, y2: number);
+  public constructor(x1: number | Point2D, y1: number | Point2D, x2: number | null = null, y2: number | null = null) {
+    if (x2 == null && y2 == null) {
+      if (typeof (x1) === 'number' && typeof (y1) === 'number') {
+        this.x = x1;
+        this.y = y1;
+      } else if (x1 instanceof Point2D && y1 instanceof Point2D) {
+        this.x = y1.x - x1.x;
+        this.y = y1.y - x1.y;
+      }
+    } else if (x2 !== null && y2 !== null && typeof (x1) === 'number' && typeof (y1) === 'number') {
+      this.x = x2 - x1;
+      this.y = y2 - y1;
+    }
   }
 
   public clone(): Vector2D {
     return new Vector2D(this.x, this.y);
   }
 
-  public add(v: Vector2D): Vector2D{
+  public add(v: Vector2D): Vector2D {
     this.x += v.x;
     this.y += v.y;
 
